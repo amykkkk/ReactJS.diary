@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const DiaryEditor = () => {
+  //html dom 요소 접근
+  const authorInput = useRef();
+  const contentInput = useRef();
+
   const [state, setState] = useState({
     author: "",
     content: "",
@@ -8,9 +12,6 @@ const DiaryEditor = () => {
   });
 
   const handleChangeState = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
-
     setState({
       ...state,
       [e.target.name]: e.target.value,
@@ -18,53 +19,43 @@ const DiaryEditor = () => {
   };
 
   const handleSubmit = () => {
+    if (state.author.length < 1) {
+      //alert("작성자는 최소 1글자 이상 입력해주세요.");
+      authorInput.current.focus();
+      return;
+    }
+
+    if (state.content.length < 5) {
+      //alert("본문은 최소 5글자 이상 입력해주세요.");
+      contentInput.current.focus();
+      return;
+    }
+
     console.log(state);
     alert("save");
   };
-  /*
-  const [author, setAuthor] = useState("");
-  const [content, setContent] = useState("");
-  */
+
   return (
     <div className="DiaryEditor">
       <h2>Today's Diary</h2>
       <div>
         <input
+          ref={authorInput}
           value={state.author}
           onChange={handleChangeState}
           name="author"
           placeholder="editor"
           type="text"
-          /*
-          onChange={(e) => {
-            //console.log(e.target.name);
-            //setAuthor(e.target.value);
-            setState({
-              ...state, // 순서 중요(처음에 배치)
-              author: e.target.value,
-              //content: state.content,
-            });
-          }}
-          */
         />
       </div>
       <div>
         <textarea
-          //value={content}
+          ref={contentInput}
           value={state.content}
           name="content"
           onChange={handleChangeState}
           placeholder="diary"
           type="text"
-          /*
-          onChange={(e) => {
-            setState({
-              ...state,
-              content: e.target.value,
-              //author: state.author,
-            });
-          }}
-          */
         />
       </div>
       <div>
