@@ -2,8 +2,6 @@ import { useEffect, useCallback, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import Lifecycle from "./Lifecycle";
-import OptimizeTest from "./OptimizeTest";
 
 function App() {
   const [data, setData] = useState([]); // 빈배열로 시작
@@ -44,20 +42,17 @@ function App() {
     setData((data) => [newItem, ...data]); //순서> 새로추가 맨앞으로
   }, []);
 
-  const onRemove = (targetId) => {
-    const newDiaryList = data.filter((it) => it.id !== targetId);
-    setData(newDiaryList);
-  };
+  const onRemove = useCallback((targetId) => {
+    setData(data.data.filter((it) => it.id !== targetId));
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(
-      data.map(
-        (
-          it //모든 요소 중에서 targetId가 일치하는것만 content부분을 newContent 수정
-        ) => (it.id === targetId ? { ...it, content: newContent } : it)
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
+      data.map((it) =>
+        it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  }, []);
 
   const getDiaryAnalysis = useMemo(() => {
     if (data.length === 0) {
