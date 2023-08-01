@@ -3,6 +3,7 @@ import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 import Lifecycle from "./Lifecycle";
+import OptimizeTest from "./OptimizeTest";
 
 function App() {
   const [data, setData] = useState([]); // 빈배열로 시작
@@ -43,7 +44,6 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다.`);
     const newDiaryList = data.filter((it) => it.id !== targetId);
     setData(newDiaryList);
   };
@@ -62,7 +62,6 @@ function App() {
     if (data.length === 0) {
       return { goodcount: 0, badCount: 0, goodRatio: 0 };
     }
-    console.log("start");
 
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
@@ -76,6 +75,7 @@ function App() {
   return (
     <div className="App">
       {/* <Lifecycle /> */}
+      <OptimizeTest />
       <DiaryEditor onCreate={onCreate} />
       <div>total : {data.length}</div>
       <div>good : {goodCount}</div>
