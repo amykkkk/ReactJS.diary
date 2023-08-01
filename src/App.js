@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useCallback, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
@@ -30,7 +30,7 @@ function App() {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -40,8 +40,9 @@ function App() {
       id: dataId.current,
     };
     dataId.current += 1; // list 갯수 더해줌
-    setData([newItem, ...data]); //순서> 새로추가 맨앞으로
-  };
+    //함수형 업데이트
+    setData((data) => [newItem, ...data]); //순서> 새로추가 맨앞으로
+  }, []);
 
   const onRemove = (targetId) => {
     const newDiaryList = data.filter((it) => it.id !== targetId);
@@ -75,7 +76,7 @@ function App() {
   return (
     <div className="App">
       {/* <Lifecycle /> */}
-      <OptimizeTest />
+      {/* <OptimizeTest /> */}
       <DiaryEditor onCreate={onCreate} />
       <div>total : {data.length}</div>
       <div>good : {goodCount}</div>
