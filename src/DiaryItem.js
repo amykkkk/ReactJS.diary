@@ -1,17 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { DiaryDispatchContext } from "./App";
 
-const DiaryItem = ({
-  onRemove,
-  onEdit,
-  author,
-  content,
-  created_date,
-  emotion,
-  id,
-}) => {
-  useEffect(() => {
-    console.log(`${id}번째 어쩌구`);
-  });
+const DiaryItem = ({ author, content, created_date, emotion, id }) => {
+  const { onRemove, onEdit } = useContext(DiaryDispatchContext);
 
   const localContentInput = useRef();
   const [localContent, setLocalContent] = useState(content);
@@ -52,27 +43,25 @@ const DiaryItem = ({
       </div>
       <div className="content">
         {isEdit ? (
-          <>
-            <textarea
-              ref={localContentInput}
-              value={localContent}
-              onChange={(e) => setLocalContent(e.target.value)}
-            />
-          </>
+          <textarea
+            ref={localContentInput}
+            value={localContent}
+            onChange={(e) => setLocalContent(e.target.value)}
+          />
         ) : (
           content
         )}
       </div>
       {isEdit ? (
-        <>
+        <div>
           <button onClick={handleQuitEdit}>❌</button>
           <button onClick={handleEdit}>⭕️</button>
-        </>
+        </div>
       ) : (
-        <>
+        <div>
           <button onClick={handleRemove}>✂️</button>
           <button onClick={toggleIsEdit}>✏️</button>
-        </>
+        </div>
       )}
     </div>
   );

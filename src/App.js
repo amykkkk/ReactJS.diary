@@ -1,4 +1,10 @@
-import { useEffect, useCallback, useMemo, useRef, useReducer } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useReducer,
+} from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
@@ -29,9 +35,10 @@ const reducer = (state, action) => {
   }
 };
 
-function App() {
-  //const [data, setData] = useState([]); // 빈배열로 시작
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
 
+function App() {
   const [data, dispatch] = useReducer(reducer, []);
 
   const dataId = useRef(0);
@@ -74,6 +81,16 @@ function App() {
     dispatch({ type: "EDIT", targetId, newContent });
   }, []);
 
+  const dispatches = {
+    onCreate,
+    onRemove,
+    onEdit,
+  };
+
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   const getDiaryAnalysis = useMemo(() => {
     if (data.length === 0) {
       return { goodcount: 0, badCount: 0, goodRatio: 0 };
@@ -89,17 +106,19 @@ function App() {
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
   return (
-    <div className="App">
-      {/* <Lifecycle /> */}
-      {/* <OptimizeTest /> */}
-      <DiaryEditor onCreate={onCreate} />
-      <div>total : {data.length}</div>
-      <div>good : {goodCount}</div>
-      <div>bad : {badCount}</div>
-      <div>good(%) : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          <DiaryEditor />
+          <div>total : {data.length}</div>
+          <div>good : {goodCount}</div>
+          <div>bad : {badCount}</div>
+          <div>good(%) : {goodRatio}</div>
+          <DiaryList />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
-export default App;
+export default App; // 파일당 하나만 쓸수 있음
