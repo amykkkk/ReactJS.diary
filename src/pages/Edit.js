@@ -11,6 +11,11 @@ const Edit = () => {
   const diaryList = useContext(DiaryStateContext);
 
   useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `Emotion Diary : ${id} Diary Edit`;
+  }, []);
+
+  useEffect(() => {
     if (diaryList.length >= 1) {
       const targerDiary = diaryList.find(
         (it) => parseInt(it.id) === parseInt(id)

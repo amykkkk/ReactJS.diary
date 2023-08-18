@@ -13,6 +13,11 @@ const Diary = () => {
   const [data, setData] = useState();
 
   useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `Emotion Diary : ${id} Diary`;
+  }, []);
+
+  useEffect(() => {
     if (diaryList.length >= 1) {
       const targerDiary = diaryList.find(
         (it) => parseInt(it.id) === parseInt(id)
