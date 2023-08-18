@@ -19,6 +19,7 @@ const Edit = () => {
       if (targerDiary) {
         setOriginData(targerDiary);
       } else {
+        alert("There is no diray.");
         navigate("/", { replace: true });
       }
     }
