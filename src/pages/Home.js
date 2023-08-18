@@ -23,7 +23,11 @@ const Home = () => {
       const lastDday = new Date(
         curDate.getFullYear(),
         curDate.getMonth() + 1,
-        0
+        0,
+        // 그날의 마지막 시분초 까지 포함 시키기
+        23,
+        59,
+        59
       ).getTime();
 
       setData(

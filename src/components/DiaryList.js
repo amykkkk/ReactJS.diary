@@ -32,7 +32,7 @@ const ControlMenu = ({ value, onChange, optionList }) => {
 
 const DiaryList = ({ diaryList }) => {
   const navigate = useNavigate(); // button onclick -> link 처럼 (react router 사용)
-  const [sortType, setSortType] = useState("lastest");
+  const [sortType, setSortType] = useState("latest");
   const [filter, setFilter] = useState("all");
 
   const getProcessedDiaryList = () => {
