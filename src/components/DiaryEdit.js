@@ -1,4 +1,4 @@
-import { useRef, useState, useContext } from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DiaryDispatchContext } from "./../App.js";
 
@@ -39,13 +39,13 @@ const getStringDate = (date) => {
   //toISOString: ISO형식의 문자열을 반환(YYYY-MM-DDTHH:mm:ss.sssZ)
 };
 
-const DiaryEdit = () => {
+const DiaryEdit = ({ isEdit, originData }) => {
   const contentRef = useRef();
   const [content, setContent] = useState("");
   const [emotion, setEmotion] = useState(3);
   const [date, setDate] = useState(getStringDate(new Date()));
 
-  const { onCreate } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
   const handleClickEmote = (emotion) => {
     setEmotion(emotion);
   };
@@ -58,14 +58,36 @@ const DiaryEdit = () => {
       return;
     }
 
-    onCreate(date, content, emotion);
+    if (
+      window.confirm(
+        isEdit
+          ? "Would you like to edit your diary?"
+          : "Would you like to start a new diary?"
+      )
+    ) {
+      if (!isEdit) {
+        onCreate(date, content, emotion);
+      } else {
+        onEdit(originData.id, date, content, emotion);
+      }
+    }
+
     navigate("/", { replace: true });
   };
+
+  useEffect(() => {
+    // 이전에 입력한 데이터 가져오기
+    if (isEdit) {
+      setDate(getStringDate(new Date(parseInt(originData.date))));
+      setEmotion(originData.emotion);
+      setContent(originData.content);
+    }
+  }, [isEdit, originData]);
 
   return (
     <div className="DiaryEditor">
       <MyHeader
-        headText={"new diary"}
+        headText={isEdit ? "Diary Edit" : "New Diary"}
         leftChild={<MyButton text={"< Back"} onClick={() => navigate(-1)} />}
       />
       <div>

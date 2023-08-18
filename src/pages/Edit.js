@@ -1,38 +1,32 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { DiaryStateContext } from "../App";
+import DiaryEditor from "../components/DiaryEdit";
 
 const Edit = () => {
+  const [originData, setOriginData] = useState();
   const navigate = useNavigate(); // Page Moving
+  const { id } = useParams();
 
-  const [searchParams, setSerchParams] = useSearchParams(); // Query String
+  const diaryList = useContext(DiaryStateContext);
 
-  const id = searchParams.get("id");
-  console.log("id : ", id);
+  useEffect(() => {
+    if (diaryList.length >= 1) {
+      const targerDiary = diaryList.find(
+        (it) => parseInt(it.id) === parseInt(id)
+      );
 
-  const mode = searchParams.get("mode");
-  console.log("mode : ", mode);
+      if (targerDiary) {
+        setOriginData(targerDiary);
+      } else {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [id, diaryList]);
 
   return (
     <div>
-      <h1>Edit</h1>
-      <p>this is Edit page.</p>
-      <button onClick={() => setSerchParams({ who: "winterwood" })}>
-        QS change
-      </button>
-
-      <button
-        onClick={() => {
-          navigate("/home");
-        }}
-      >
-        Home
-      </button>
-      <button
-        onClick={() => {
-          navigate(-1);
-        }}
-      >
-        Back
-      </button>
+      {originData && <DiaryEditor isEdit={true} originData={originData} />}
     </div>
   );
 };
