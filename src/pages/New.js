@@ -1,8 +1,9 @@
+import DiaryEdit from "../components/DiaryEdit";
+
 const New = () => {
   return (
     <div>
-      <h1>New</h1>
-      <p>this is New page.</p>
+      <DiaryEdit />
     </div>
   );
 };
